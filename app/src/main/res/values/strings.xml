@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LifeClock</string>
+    <string name="timer">Timer</string>
+    <string name="setting">Setting</string>
+</resources>
