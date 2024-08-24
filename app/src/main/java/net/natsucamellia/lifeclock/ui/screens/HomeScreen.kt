@@ -32,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import net.natsucamellia.lifeclock.R
@@ -68,6 +69,7 @@ fun TimerScreen(
                 .padding(it)
                 .padding(horizontal = 16.dp)
         ) {
+            val isClockRunning = lifeClockModel.remainMillis > 0
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,32 +77,40 @@ fun TimerScreen(
                     .fillMaxWidth()
                     .weight(1f),
             ) {
-                Text(
-                    text = "How will you spend?",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                TimeDisplay(remainMillis = lifeClockModel.remainMillis)
+                if (isClockRunning) {
+                    Text(
+                        text = "How will you spend?",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    TimeDisplay(remainMillis = lifeClockModel.remainMillis)
+                } else {
+                    Text(
+                        text = "Tap button to set birthday & expected age",
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-                TimerController(
-                    isClockRunning = lifeClockModel.remainMillis > 0,
-                    onPlayClicked = onClickSettings,
-                    onPauseClicked = {
-                        scope.launch {
-                            snackbarHostState.currentSnackbarData?.dismiss()
-                            snackbarHostState.showSnackbar("Life goes on!")
-                        }
-                    },
-                    onStopClicked = {
-                        scope.launch {
-                            snackbarHostState.currentSnackbarData?.dismiss()
-                            snackbarHostState.showSnackbar("Don't give up!")
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 32.dp)
-                )
+            TimerController(
+                isClockRunning = isClockRunning,
+                onPlayClicked = onClickSettings,
+                onPauseClicked = {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar("Life goes on!")
+                    }
+                },
+                onStopClicked = {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar("Don't give up!")
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp)
+            )
         }
     }
 }
