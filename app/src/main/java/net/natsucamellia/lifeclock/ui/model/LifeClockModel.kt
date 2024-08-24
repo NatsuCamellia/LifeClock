@@ -1,11 +1,14 @@
 package net.natsucamellia.lifeclock.ui.model
 
 import android.annotation.SuppressLint
+import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import net.natsucamellia.lifeclock.R
 import net.natsucamellia.lifeclock.services.TimerService
 import java.time.Instant
 import java.time.LocalDateTime
@@ -14,6 +17,13 @@ import java.time.ZoneOffset
 import kotlin.math.max
 
 class LifeClockModel : ViewModel() {
+    // Settings
+    enum class Theme(@StringRes val resId: Int) {
+        SYSTEM(R.string.system), LIGHT(R.string.light), DARK(R.string.dark)
+    }
+    var theme by mutableStateOf(Theme.SYSTEM)
+
+    // Clock
     @SuppressLint("StaticFieldLeak")
     var service: TimerService? = null
     var birthdayEpoch by mutableLongStateOf(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())

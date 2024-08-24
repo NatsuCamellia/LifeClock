@@ -2,4 +2,8 @@
     <string name="app_name">LifeClock</string>
     <string name="timer">Timer</string>
     <string name="setting">Setting</string>
+    <string name="version">version</string>
+    <string name="system">System</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
 </resources>

@@ -1,6 +1,8 @@
 package net.natsucamellia.lifeclock.ui.screens
 
+import android.content.Intent
 import android.icu.text.SimpleDateFormat
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,20 +11,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Cake
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -36,9 +45,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import androidx.core.net.toUri
 import net.natsucamellia.lifeclock.R
 import net.natsucamellia.lifeclock.ui.model.LifeClockModel
 import kotlin.math.roundToInt
@@ -49,6 +61,7 @@ fun SettingScreen(
     lifeClockModel: LifeClockModel,
     navigateUp: () -> Unit
 ) {
+    val context = LocalContext.current
     val datePickerState = rememberDatePickerState(lifeClockModel.birthdayEpoch)
     val age = lifeClockModel.age
     var openDatePickerDialog by remember { mutableStateOf(false) }
@@ -73,25 +86,56 @@ fun SettingScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp)
         ) {
+            SettingsCategory("Appearance")
+            ButtonGroupPref(
+                title = "Theme",
+                options = LifeClockModel.Theme.entries.map {
+                    stringResource(it.resId)
+                },
+                values = LifeClockModel.Theme.entries,
+                currentValue = lifeClockModel.theme
+            ) {
+                lifeClockModel.theme = it
+            }
+            Divider(modifier = Modifier.padding(vertical = 16.dp))
+            SettingsCategory("General")
             IconPreference(
                 title = "Birthday",
                 summary = dateFormat.format(datePickerState.selectedDateMillis),
                 imageVector = Icons.Outlined.Cake,
                 onClick = { openDatePickerDialog = true }
             )
-//            Divider()
             IconPreference(
                 title = "Expected Age",
                 summary = "$age years old",
                 imageVector = Icons.Outlined.Timer,
                 onClick = { openYearChip = true }
             )
+            Divider(modifier = Modifier.padding(vertical = 16.dp))
+            SettingsCategory("About")
+            IconPreference(
+                title = "Version",
+                summary = context.packageManager.getPackageInfo(context.packageName, 0).versionName,
+                imageVector = Icons.Outlined.History
+            )
+            IconPreference(
+                title = "Source Code",
+                summary = "Check the source code on GitHub",
+                imageVector = Icons.AutoMirrored.Outlined.OpenInNew
+            ) {
+                val url = "https://github.com/NatsuCamellia/LifeClock"
+                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                runCatching {
+                    context.startActivity(intent)
+                }
+            }
         }
 
         if (openDatePickerDialog) {
@@ -140,7 +184,6 @@ fun SettingsCategory(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp)
     ) {
         Text(
             text = title.uppercase(),
@@ -149,6 +192,77 @@ fun SettingsCategory(
         )
     }
 }
+
+@Composable
+fun <T> ButtonGroupPref(
+    title: String,
+    options: List<String>,
+    values: List<T>,
+    currentValue: T,
+    onChange: (T) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+    ) {
+        Text(title)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            val cornerRadius = 20.dp
+            var selectedItem by remember {
+                mutableStateOf(
+                    currentValue
+                )
+            }
+
+            values.forEachIndexed { index, value ->
+                val startRadius = if (index != 0) 0.dp else cornerRadius
+                val endRadius = if (index == values.size - 1) cornerRadius else 0.dp
+
+                OutlinedButton(
+                    onClick = {
+                        selectedItem = value
+                        onChange.invoke(values[index])
+                    },
+                    modifier = Modifier
+                        .offset(if (index == 0) 0.dp else (-1 * index).dp, 0.dp)
+                        .zIndex(if (selectedItem == value) 1f else 0f),
+                    shape = RoundedCornerShape(
+                        topStart = startRadius,
+                        topEnd = endRadius,
+                        bottomStart = startRadius,
+                        bottomEnd = endRadius
+                    ),
+                    border = BorderStroke(
+                        1.dp,
+                        if (selectedItem == value) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.75f)
+                        }
+                    ),
+                    colors = if (selectedItem == value) {
+                        ButtonDefaults.outlinedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        ButtonDefaults.outlinedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                ) {
+                    Text(options[index])
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun IconPreference(
@@ -163,7 +277,8 @@ fun IconPreference(
             .clickable {
                 onClick.invoke()
             }
-            .padding(16.dp),
+            .padding(vertical = 8.dp)
+            .padding(start = 8.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {

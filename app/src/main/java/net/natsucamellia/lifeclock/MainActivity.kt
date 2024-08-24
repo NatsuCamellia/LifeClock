@@ -12,6 +12,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
@@ -31,7 +32,14 @@ class MainActivity : ComponentActivity() {
 
         startTimerService()
         setContent {
-            LifeClockTheme {
+            val darkTheme = when (lifeClockModel.theme) {
+                LifeClockModel.Theme.SYSTEM -> isSystemInDarkTheme()
+                LifeClockModel.Theme.LIGHT -> false
+                LifeClockModel.Theme.DARK -> true
+            }
+            LifeClockTheme(
+                darkTheme = darkTheme
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize()) {
                     NavContainer(lifeClockModel = lifeClockModel)
