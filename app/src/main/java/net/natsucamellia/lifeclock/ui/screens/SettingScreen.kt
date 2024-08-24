@@ -105,9 +105,9 @@ fun SettingScreen(
                 .padding(horizontal = 16.dp)
                 .verticalScroll(scrollState)
         ) {
-            SettingsCategory("Appearance")
+            SettingsCategory(stringResource(R.string.appearance))
             ButtonGroupPref(
-                title = "Theme",
+                title = stringResource(R.string.theme),
                 options = LifeClockModel.Theme.entries.map {
                     stringResource(it.resId)
                 },
@@ -117,29 +117,29 @@ fun SettingScreen(
                 lifeClockModel.theme = it
             }
             Divider(modifier = Modifier.padding(vertical = 16.dp))
-            SettingsCategory("General")
+            SettingsCategory(stringResource(R.string.general))
             IconPreference(
-                title = "Birthday",
+                title = stringResource(R.string.birthday),
                 summary = dateFormat.format(datePickerState.selectedDateMillis),
                 imageVector = Icons.Outlined.Cake,
                 onClick = { openDatePickerDialog = true }
             )
             IconPreference(
-                title = "Expected Age",
-                summary = "$age years old",
+                title = stringResource(R.string.expected_age),
+                summary = stringResource(R.string.years_old, age),
                 imageVector = Icons.Outlined.Timer,
                 onClick = { openYearChip = true }
             )
             Divider(modifier = Modifier.padding(vertical = 16.dp))
-            SettingsCategory("About")
+            SettingsCategory(stringResource(R.string.about))
             IconPreference(
-                title = "Version",
+                title = stringResource(R.string.version),
                 summary = context.packageManager.getPackageInfo(context.packageName, 0).versionName,
                 imageVector = Icons.Outlined.History
             )
             IconPreference(
-                title = "Source Code",
-                summary = "Check the source code on GitHub",
+                title = stringResource(R.string.source_code),
+                summary = stringResource(R.string.check_the_source_code_on_github),
                 imageVector = Icons.AutoMirrored.Outlined.OpenInNew
             ) {
                 val url = "https://github.com/NatsuCamellia/LifeClock"
@@ -176,7 +176,7 @@ fun SettingScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "Expected Age $age")
+                    Text(text = stringResource(R.string.expected_age_sheet, age))
                 }
                 Slider(
                     value = age.toFloat(),

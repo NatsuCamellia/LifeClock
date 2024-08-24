@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,6 +45,7 @@ fun TimerScreen(
     lifeClockModel: LifeClockModel,
     onClickSettings: () -> Unit
 ) {
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -79,14 +81,14 @@ fun TimerScreen(
             ) {
                 if (isClockRunning) {
                     Text(
-                        text = "How will you spend?",
+                        text = stringResource(R.string.how_will_you_spend),
                         style = MaterialTheme.typography.titleLarge
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     TimeDisplay(remainMillis = lifeClockModel.remainMillis)
                 } else {
                     Text(
-                        text = "Tap button to set birthday & expected age",
+                        text = stringResource(R.string.tap_button),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center
                     )
@@ -98,13 +100,13 @@ fun TimerScreen(
                 onPauseClicked = {
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarHostState.showSnackbar("Life goes on!")
+                        snackbarHostState.showSnackbar(context.getString(R.string.life_goes_on))
                     }
                 },
                 onStopClicked = {
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarHostState.showSnackbar("Don't give up!")
+                        snackbarHostState.showSnackbar(context.getString(R.string.don_t_give_up))
                     }
                 },
                 modifier = Modifier

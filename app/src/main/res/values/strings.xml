@@ -2,8 +2,22 @@
     <string name="app_name">LifeClock</string>
     <string name="timer">Timer</string>
     <string name="setting">Setting</string>
-    <string name="version">version</string>
+    <string name="version">Version</string>
     <string name="system">System</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    <string name="how_will_you_spend">How will you spend?</string>
+    <string name="life_goes_on">Life goes on!</string>
+    <string name="don_t_give_up">Don\'t give up!</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="theme">Theme</string>
+    <string name="birthday">Birthday</string>
+    <string name="expected_age">Expected Age</string>
+    <string name="years_old">%1$s years old</string>
+    <string name="about">About</string>
+    <string name="source_code">Source Code</string>
+    <string name="check_the_source_code_on_github">Check the source code on GitHub</string>
+    <string name="expected_age_sheet">Expected Age %1$s years old</string>
+    <string name="tap_button"><![CDATA[Tap button to set birthday & expected age]]></string>
 </resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">生命時鐘</string>
+    <string name="timer">計時器</string>
+    <string name="setting">設定</string>
+    <string name="version">版本</string>
+    <string name="system">系統</string>
+    <string name="light">淺色</string>
+    <string name="dark">深色</string>
+    <string name="how_will_you_spend">你會如何運用你的時間？</string>
+    <string name="life_goes_on">船到橋頭自然直！</string>
+    <string name="don_t_give_up">別放棄！</string>
+    <string name="appearance">外觀</string>
+    <string name="general">一般</string>
+    <string name="theme">主題</string>
+    <string name="birthday">生日</string>
+    <string name="expected_age">預期壽命</string>
+    <string name="years_old">%1$s 歲</string>
+    <string name="about">關於</string>
+    <string name="source_code">原始碼</string>
+    <string name="check_the_source_code_on_github">在 GitHub 上查看原始碼</string>
+    <string name="expected_age_sheet">預期壽命 %1$s 歲</string>
+    <string name="tap_button"><![CDATA[點擊按鈕來設定生日與預期壽命]]></string>
+</resources>
